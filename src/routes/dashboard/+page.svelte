@@ -12,12 +12,23 @@
 			username = user.user_metadata.username || null;
 		}
 	});
+
+	async function handleSignOut() {
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			console.error('Sign out error:', error.message);
+		} else {
+			// Redirect to login page after sign out
+			window.location.href = '/login';
+		}
+	}
 </script>
 
 <div>
 	<h1>Welcome to the Dashboard</h1>
 	{#if username}
 		<p>Hello, {username}!</p>
+		<button onclick={handleSignOut}>Sign out</button>
 	{:else}
 		<p>Please log in to see your dashboard.</p>
 		<p>
