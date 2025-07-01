@@ -9,4 +9,18 @@
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
+
+	<script>
+		import { invalidate } from '$app/navigation';
+		import { onMount } from 'svelte';
+		import { supabase } from '$lib/supabase.js';
+
+		onMount(() => {
+			const { data } = supabase.auth.onAuthStateChange(() => {
+				invalidate('supabase:auth');
+			});
+
+			return () => data.subscription.unsubscribe();
+		});
+	</script>
 </html>
