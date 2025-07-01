@@ -1,2 +1,2 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<!-- Create a check to see if user is authenticated, if they are, navigate to dashboard -->
+<a href="/login">Log in</a>
