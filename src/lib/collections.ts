@@ -14,6 +14,13 @@ export async function createCollection(
 	ispublic: boolean = true
 ) {
 	try {
+		const {
+			data: { user }
+		} = await supabase.auth.getUser();
+		if (!user) {
+			throw new Error('User not authenticated');
+		}
+
 		const slug = generateSlug(title);
 
 		const { data, error } = await supabase
@@ -22,7 +29,8 @@ export async function createCollection(
 				title,
 				slug,
 				description,
-				is_public: ispublic
+				is_public: ispublic,
+				user_id: user.id
 			})
 			.select()
 			.single();
