@@ -1,14 +1,20 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabase';
 	import { onMount } from 'svelte';
+	import { uploadImage } from '$lib/imageUpload'; // Assuming you have a module for image upload logic
 
+	let fetchedUser: any = null;
 	let username: string | null = null;
+	let file: File | null = null;
+	let uploadError: string | null = null;
 
 	onMount(async () => {
 		const {
 			data: { user }
 		} = await supabase.auth.getUser();
 		if (user) {
+			// User is authenticated, set user data
+			fetchedUser = user;
 			username = user.user_metadata.username || null;
 		}
 	});
