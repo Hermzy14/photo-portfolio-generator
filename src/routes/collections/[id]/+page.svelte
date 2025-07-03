@@ -1,4 +1,5 @@
 <script>
+	//TODO: Make sure only authenticated users can access this page
 	import { page } from '$app/stores';
 	import { updateCollection } from '$lib/collections';
 	import { uploadImage } from '$lib/imageUpload';

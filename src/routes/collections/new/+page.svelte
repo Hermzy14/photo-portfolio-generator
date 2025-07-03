@@ -1,4 +1,5 @@
 <script lang="ts">
+	// TODO: Make sure only authenticated users can access this page
 	import { createCollection } from '$lib/collections';
 
 	let title: string = '';
