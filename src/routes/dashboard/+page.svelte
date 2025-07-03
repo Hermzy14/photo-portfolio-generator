@@ -17,7 +17,7 @@
 
 		const { data, error } = await supabase
 			.from('collections')
-			.select('*')
+			.select('*, images(*)')
 			.eq('user_id', user?.id)
 			.order('created_at', { ascending: false });
 
@@ -62,12 +62,13 @@
 
 					{#if collection.images && collection.images.length > 0}
 						<img src={getImageUrl(collection.images[0].file_path)} alt={collection.title} />
+
+						<a href="/collections/{collection.id}">Edit</a>
+						<a href="/collection/{collection.slug}">View</a>
 					{:else}
 						<span>No images</span>
+						<a href="/collections/{collection.id}">Add an image</a>
 					{/if}
-
-					<a href="/collection/{collection.slug}">Edit</a>
-					<a href="/collections/{collection.id}">View and Share</a>
 				{/each}
 			</ul>
 		{:else}

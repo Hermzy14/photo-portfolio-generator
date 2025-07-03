@@ -41,7 +41,6 @@ export async function uploadImage(file: File, collectionId: string) {
 				file_path: uploadData.path,
 				file_name: file.name, // TODO: Store original file name or the generated file name?
 				file_size: file.size,
-				file_type: file.type,
 				title: file.name.split('.')[0], // Use the file name without extension as the title
 				sort_order: 0
 			})
