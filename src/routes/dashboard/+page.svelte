@@ -65,11 +65,15 @@
 						{/if}
 
 						{#if collection.images && collection.images.length > 0}
-							<img
-								src={getImageUrl(collection.images[0].file_path)}
-								alt={collection.title}
-								class="collection-images"
-							/>
+							<div class="images-container">
+								{#each collection.images as image}
+									<img
+										src={getImageUrl(image.file_path)}
+										alt={collection.title}
+										class="collection-images"
+									/>
+								{/each}
+							</div>
 							<div class="image-edit-view">
 								<a href="/collections/{collection.id}" class="btn">Edit</a>
 								<a href="/collection/{collection.slug}" class="btn">View</a>
@@ -111,15 +115,24 @@
 
 	#dashboard-collection {
 		gap: 1rem;
+		height: auto;
+		padding: 2rem 0;
 	}
 
 	.collection {
-		display: flex;
-		flex-direction: column;
 		background-color: whitesmoke;
 		border: 1px solid black;
 		border-radius: 8px;
 		padding: 1rem;
+		max-width: 50dvw;
+	}
+
+	.images-container {
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 1rem;
+		overflow-x: auto;
+		white-space: nowrap;
 	}
 
 	.collection-images {
@@ -128,6 +141,10 @@
 		object-fit: cover;
 		border: 1px solid black;
 		border-radius: 8px;
-		margin: 1rem 0;
+		margin: 1rem 0 0.25rem 0;
+	}
+
+	.image-edit-view {
+		margin-top: 1rem;
 	}
 </style>

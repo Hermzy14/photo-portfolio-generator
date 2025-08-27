@@ -12,11 +12,14 @@
 			box-sizing: border-box;
 		}
 
+		body {
+			background-color: azure;
+		}
+
 		section {
 			display: grid;
 			place-content: center;
 			font-family: sans-serif;
-			background-color: azure;
 			height: 100dvh;
 			width: calc(100dvw-10dvw);
 			padding: 0 10dvw;

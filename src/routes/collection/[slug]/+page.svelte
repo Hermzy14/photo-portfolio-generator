@@ -26,19 +26,17 @@
 	{#if errorMessage}
 		<p class="error">{errorMessage}</p>
 	{:else if collectionData}
-		<div>
-			<h1>{collectionData.title}</h1>
-			<p>{collectionData.description}</p>
-			{#if collectionData.images && collectionData.images.length > 0}
-				<div class="image-grid">
-					{#each collectionData.images as image}
-						<img src={getImageUrl(image.file_path)} alt={image.title} />
-					{/each}
-				</div>
-			{:else}
-				<p>No images available in this collection.</p>
-			{/if}
-		</div>
+		<h1>{collectionData.title}</h1>
+		<p>{collectionData.description}</p>
+		{#if collectionData.images && collectionData.images.length > 0}
+			<div class="image-grid">
+				{#each collectionData.images as image}
+					<img src={getImageUrl(image.file_path)} alt={image.title} />
+				{/each}
+			</div>
+		{:else}
+			<p>No images available in this collection.</p>
+		{/if}
 	{:else}
 		<p>Loading...</p>
 	{/if}
@@ -48,11 +46,15 @@
 	#collection-view {
 		padding: 2rem;
 		display: flex;
+		flex-direction: column;
 		justify-content: flex-start;
 	}
 
 	.image-grid {
-		display: grid;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		width: 100%;
 		margin-top: 1rem;
 	}
 
