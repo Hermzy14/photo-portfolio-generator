@@ -29,10 +29,17 @@
 		}
 	}
 
+	// Displays a confirmation modal for user to confirm deletion of collection
+	let showDeleteConfirm = false;
 	function confirmDelete() {
-		if (window.confirm('Are you sure?')) {
-			handleDeleteCollection();
-		}
+		showDeleteConfirm = true;
+	}
+	function cancelDelete() {
+		showDeleteConfirm = false;
+	}
+	function confirmDeleteAction() {
+		showDeleteConfirm = false;
+		handleDeleteCollection();
 	}
 
 	// handle delete collection
@@ -76,6 +83,16 @@
 
 	<a href="/dashboard" class="btn">Save</a>
 	<button onclick={confirmDelete} class="btn" id="delete-btn">Delete collection</button>
+
+	{#if showDeleteConfirm}
+		<div class="modal-backdrop">
+			<div class="modal">
+				<p>Are you sure you want to delete this collection?</p>
+				<button class="btn" onclick={confirmDeleteAction}>Yes, delete</button>
+				<button class="btn" onclick={cancelDelete}>Cancel</button>
+			</div>
+		</div>
+	{/if}
 </section>
 
 <style>
@@ -97,5 +114,28 @@
 
 	#delete-btn {
 		background-color: lightcoral;
+	}
+	.modal-backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+	}
+	.modal {
+		background: azure;
+		padding: 2rem;
+		border-radius: 10px;
+		box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		min-width: 300px;
+		align-items: center;
 	}
 </style>
