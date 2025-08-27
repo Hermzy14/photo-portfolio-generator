@@ -107,7 +107,7 @@ export async function getCollectionBySlug(slug: string, includePrivate: boolean 
 
 	// Sort images by sort_order
 	if (data.images) {
-		data.images.sort((a, b) => a.sort_order - b.sort_order);
+		data.images.sort((a: any, b: any) => a.sort_order - b.sort_order);
 	}
 
 	return data;

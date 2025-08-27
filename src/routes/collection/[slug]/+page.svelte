@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import { getCollectionBySlug } from '$lib/collections';
 	import { getImageUrl } from '$lib/imageUpload';
 	import { onMount } from 'svelte';
 
-	let collectionData = null;
+	let collectionData: any = null;
 	let errorMessage = '';
 	let slug = $page.params.slug;
 

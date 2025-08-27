@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	let username: string | null = null;
-	let collections = [];
+	let collections: any[] = [];
 
 	onMount(async () => {
 		const {
