@@ -40,47 +40,94 @@
 	}
 </script>
 
-<div>
-	<h1>Welcome to the Dashboard</h1>
+<main id="dashboard">
 	{#if username}
-		<p>Hello, {username}!</p>
-		<button onclick={handleSignOut}>Sign out</button>
-		{#if collections.length > 0}
-			<div>
-				<h1>My Collections</h1>
-				<a href="/collections/new">Create new collection</a>
-			</div>
-			<ul>
+		<nav>
+			<h1>Welcome to the Dashboard</h1>
+			<p>Hello, {username}!</p>
+			<button onclick={handleSignOut} class="btn">Sign out</button>
+		</nav>
+
+		<section id="dashboard-collection">
+			{#if collections.length > 0}
+				<div id="collection-title-wrapper">
+					<h1>My Collections</h1>
+					<a href="/collections/new" class="btn">Create new collection</a>
+				</div>
 				{#each collections as collection}
-					{#if collection.title}
-						<h2>{collection.title}</h2>
-					{/if}
+					<div class="collection">
+						{#if collection.title}
+							<h2>{collection.title}</h2>
+						{/if}
 
-					{#if collection.description}
-						<p>{collection.description}</p>
-					{/if}
+						{#if collection.description}
+							<p>{collection.description}</p>
+						{/if}
 
-					{#if collection.images && collection.images.length > 0}
-						<img src={getImageUrl(collection.images[0].file_path)} alt={collection.title} />
-
-						<a href="/collections/{collection.id}">Edit</a>
-						<a href="/collection/{collection.slug}">View</a>
-					{:else}
-						<span>No images</span>
-						<a href="/collections/{collection.id}">Add an image</a>
-					{/if}
+						{#if collection.images && collection.images.length > 0}
+							<img
+								src={getImageUrl(collection.images[0].file_path)}
+								alt={collection.title}
+								class="collection-images"
+							/>
+							<div class="image-edit-view">
+								<a href="/collections/{collection.id}" class="btn">Edit</a>
+								<a href="/collection/{collection.slug}" class="btn">View</a>
+							</div>
+						{:else}
+							<span>No images</span>
+							<a href="/collections/{collection.id}">Add an image</a>
+						{/if}
+					</div>
 				{/each}
-			</ul>
-		{:else}
-			<p>You have no collections yet.</p>
-			<p>
-				<a href="/collections/new">Create your first collection</a>
-			</p>
-		{/if}
+			{:else}
+				<p>You have no collections yet.</p>
+				<p>
+					<a href="/collections/new">Create your first collection</a>
+				</p>
+			{/if}
+		</section>
 	{:else}
 		<p>Please log in to see your dashboard.</p>
 		<p>
 			<a href="/login">Log in</a> | <a href="/signup">Sign up</a>
 		</p>
 	{/if}
-</div>
+</main>
+
+<style>
+	nav {
+		display: flex;
+		justify-content: space-evenly;
+		padding: 2rem;
+		background-color: rgb(212, 228, 228);
+		border-bottom: 1px solid black;
+	}
+
+	#collection-title-wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+
+	#dashboard-collection {
+		gap: 1rem;
+	}
+
+	.collection {
+		display: flex;
+		flex-direction: column;
+		background-color: whitesmoke;
+		border: 1px solid black;
+		border-radius: 8px;
+		padding: 1rem;
+	}
+
+	.collection-images {
+		width: 20dvw;
+		height: 20dvw;
+		object-fit: cover;
+		border: 1px solid black;
+		border-radius: 8px;
+		margin: 1rem 0;
+	}
+</style>
