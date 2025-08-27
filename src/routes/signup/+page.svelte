@@ -30,16 +30,31 @@
 </script>
 
 <!-- Signup form -->
-<div>
+<section id="sign-up-page">
 	<h1>Sign Up</h1>
 	<form onsubmit={handleSignup}>
-		<input type="text" bind:value={username} placeholder="Username" required />
-		<input type="email" bind:value={email} placeholder="Email" required />
-		<input type="password" bind:value={password} placeholder="Password" required />
-		<button type="submit">Sign Up</button>
+		<div id="sign-up-wrapper">
+			<input type="text" bind:value={username} placeholder="Username" required />
+			<input type="email" bind:value={email} placeholder="Email" required />
+			<input type="password" bind:value={password} placeholder="Password" required />
+			<button type="submit" class="btn">Sign Up</button>
+		</div>
 		{#if error}
 			<p class="error">{error}</p>
 		{/if}
 	</form>
-</div>
-<p>Already have an account? <a href="/login">Log In</a></p>
+	<p id="cta-text">Already have an account? <a href="/login">Log In</a></p>
+</section>
+
+<style>
+	#sign-up-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 1rem 0 0.5rem 0;
+	}
+
+	#cta-text {
+		margin-top: 1rem;
+	}
+</style>
