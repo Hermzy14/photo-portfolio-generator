@@ -114,6 +114,46 @@ export async function getCollectionBySlug(slug: string, includePrivate: boolean 
 }
 
 /**
+ * Get a collection by its id.
+ * @param {string} id - The id of the collection to retrieve.
+ * @returns {Promise<object>} - The collection data.
+ * @throws {Error} - If there is an error along the way.
+ */
+export async function getCollectionById(id: string) {
+	// Query for retrieving collection
+	let query = supabase
+		.from('collections')
+		.select(
+			`
+				*,
+				images (
+					id,
+					file_path,
+					file_name,
+					title,
+					description,
+					sort_order
+				)
+			`
+		)
+		.eq('id', id);
+
+	const { data, error } = await query.single();
+
+	if (error) {
+		console.error(`Error fetching collection with ID ${id}: `, error);
+		throw new Error(`Collection not found: ${error}`);
+	}
+
+	// Sort images by sort_order
+	if (data.images) {
+		data.images.sort((a: any, b: any) => a.sort_order - b.sort_order);
+	}
+
+	return data;
+}
+
+/**
  * Updates a collection.
  * @param {string} id - The ID of the collection to update.
  * @param {object} updates - The updates to apply to the collection.

@@ -1,8 +1,8 @@
 <script lang="ts">
 	//TODO: Make sure only authenticated users can access this page
 	import { page } from '$app/stores';
-	import { updateCollection, deleteCollection } from '$lib/collections';
-	import { uploadImage } from '$lib/imageUpload';
+	import { updateCollection, deleteCollection, getCollectionById } from '$lib/collections';
+	import { getImageUrl, uploadImage } from '$lib/imageUpload';
 	import { onMount } from 'svelte';
 
 	// Collection ID from the route
@@ -13,6 +13,19 @@
 		isPublic: false,
 		images: []
 	};
+
+	// Fetch current collection
+	let data: any = null;
+	let errorMessage = '';
+
+	onMount(async () => {
+		try {
+			data = await getCollectionById(collectionId);
+		} catch (error) {
+			console.error(error);
+			errorMessage = 'An error occured while fetching collection.';
+		}
+	});
 
 	// Function to handle image upload
 	async function handleImageChange(event: any) {
@@ -76,7 +89,7 @@
 		</label>
 	</div>
 
-	<!-- Add image button -->
+	<!-- Add and remove images -->
 	<div class="collection-edit-section">
 		<input type="file" accept="image/*" multiple onchange={handleImageChange} />
 	</div>
