@@ -118,10 +118,11 @@
 	}
 </script>
 
-{#if errorMessage}
-	<p class="error">{errorMessage}</p>
-{:else if data}
-	<section id="collection-edit">
+<section id="collection-edit">
+	<a class="btn" href="/dashboard">Go back to Dashboard</a>
+	{#if errorMessage}
+		<p class="error">{errorMessage}</p>
+	{:else if data}
 		<!-- Collection title editable field -->
 		<div class="collection-edit-section">
 			<h2>Title</h2>
@@ -170,10 +171,10 @@
 				</div>
 			</div>
 		{/if}
-	</section>
-{:else}
-	<p>Loading...</p>
-{/if}
+	{:else}
+		<p>Loading...</p>
+	{/if}
+</section>
 
 <style>
 	.upload-statusbar {
