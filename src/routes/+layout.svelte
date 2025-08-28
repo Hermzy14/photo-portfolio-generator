@@ -14,12 +14,12 @@
 
 		body {
 			background-color: azure;
+			font-family: sans-serif;
 		}
 
 		section {
 			display: grid;
 			place-content: center;
-			font-family: sans-serif;
 			height: 100dvh;
 			width: calc(100dvw-10dvw);
 			padding: 0 10dvw;

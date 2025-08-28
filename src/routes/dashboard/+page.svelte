@@ -43,8 +43,8 @@
 <main id="dashboard">
 	{#if username}
 		<nav>
-			<h1>Welcome to the Dashboard</h1>
-			<p>Hello, {username}!</p>
+			<h1>Dashboard</h1>
+			<p>Logged in as: {username}</p>
 			<button onclick={handleSignOut} class="btn">Sign out</button>
 		</nav>
 
@@ -105,6 +105,7 @@
 	nav {
 		display: flex;
 		justify-content: space-evenly;
+		align-items: center;
 		padding: 2rem;
 		background-color: rgb(212, 228, 228);
 		border-bottom: 1px solid black;
