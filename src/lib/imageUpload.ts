@@ -14,19 +14,57 @@ export async function uploadImage(file: File, collectionId: string) {
 			throw new Error('Invalid file type. Please upload an image.');
 		}
 
-		// TODO: Validate image size
+		// Downscale the image before upload (max 1000x1000px)
+		async function downscaleImage(file: File, maxSize = 1000): Promise<Blob> {
+			return new Promise((resolve, reject) => {
+				const img = new window.Image();
+				const url = URL.createObjectURL(file);
+				img.onload = () => {
+					let { width, height } = img;
+					if (width > maxSize || height > maxSize) {
+						const aspect = width / height;
+						if (aspect > 1) {
+							width = maxSize;
+							height = Math.round(maxSize / aspect);
+						} else {
+							height = maxSize;
+							width = Math.round(maxSize * aspect);
+						}
+					}
+					const canvas = document.createElement('canvas');
+					canvas.width = width;
+					canvas.height = height;
+					const ctx = canvas.getContext('2d');
+					if (!ctx) return reject('Could not get canvas context');
+					ctx.drawImage(img, 0, 0, width, height);
+					canvas.toBlob(
+						(blob) => {
+							if (blob) resolve(blob);
+							else reject('Failed to convert canvas to Blob');
+						},
+						file.type,
+						0.92 // quality
+					);
+				};
+				img.onerror = (e) => reject('Image load error');
+				img.src = url;
+			});
+		}
+
+		// Downscale image if needed
+		const resizedBlob = await downscaleImage(file, 1600);
 
 		// Generate a unique file name
 		const fileExtension = file.name.split('.').pop();
 		const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExtension}`;
 		const filePath = `collections/${collectionId}/${fileName}`;
 
-		// Upload the file to Supabase storage
+		// Upload the resized file to Supabase storage
 		const { data: uploadData, error: uploadError } = await supabase.storage
 			.from('portfolio-images')
-			.upload(filePath, file, {
-				cacheControl: '3600', // Cache for 1 hour
-				upsert: false // Set to true if you want to overwrite existing files with the same name
+			.upload(filePath, resizedBlob, {
+				cacheControl: '3600',
+				upsert: false
 			});
 
 		if (uploadError) {
@@ -39,9 +77,9 @@ export async function uploadImage(file: File, collectionId: string) {
 			.insert({
 				collection_id: collectionId,
 				file_path: uploadData.path,
-				file_name: file.name, // TODO: Store original file name or the generated file name?
-				file_size: file.size,
-				title: file.name.split('.')[0], // Use the file name without extension as the title
+				file_name: file.name, // Store original file name
+				file_size: resizedBlob.size,
+				title: file.name.split('.')[0],
 				sort_order: 0
 			})
 			.select()
