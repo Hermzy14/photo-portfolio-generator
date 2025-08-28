@@ -1,9 +1,8 @@
 <script lang="ts">
-	//TODO: Make sure only authenticated users can access this page
 	import { page } from '$app/stores';
 	import { updateCollection, deleteCollection, getCollectionById } from '$lib/collections';
 	import { getImageUrl, uploadImage } from '$lib/imageUpload';
-	import { supabase } from '$lib/supabase';
+	import { supabase, isSession } from '$lib/supabase';
 	// Remove image from collection
 	async function handleRemoveImage(imageId: string, filePath: string) {
 		try {
@@ -33,6 +32,9 @@
 		images: []
 	};
 
+	let userId: string | null = null;
+	let notAuthorized = false;
+
 	let isSaving = false;
 	let saveMessage = '';
 
@@ -41,8 +43,23 @@
 	let errorMessage = '';
 
 	onMount(async () => {
+		// 1. Check if user is logged in
+		const {
+			data: { user }
+		} = await supabase.auth.getUser();
+		if (!user) {
+			window.location.href = '/login';
+			return;
+		}
+		userId = user.id;
+
 		try {
 			data = await getCollectionById(collectionId);
+			// 2. Check ownership
+			if (!data || data.user_id !== userId) {
+				notAuthorized = true;
+				return;
+			}
 			// Initialize editable fields
 			collectionData.title = data.title;
 			collectionData.description = data.description;
@@ -120,7 +137,9 @@
 
 <section id="collection-edit">
 	<a class="btn" href="/dashboard">Go back to Dashboard</a>
-	{#if errorMessage}
+	{#if notAuthorized}
+		<p class="error">You are not authorized to edit this collection.</p>
+	{:else if errorMessage}
 		<p class="error">{errorMessage}</p>
 	{:else if data}
 		<!-- Collection title editable field -->
@@ -177,26 +196,6 @@
 </section>
 
 <style>
-	.upload-statusbar {
-		margin-top: 1rem;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.25rem;
-	}
-	.progress-bar-wrapper {
-		width: 100%;
-		height: 8px;
-		background: #e0e0e0;
-		border-radius: 4px;
-		overflow: hidden;
-	}
-	.progress-bar {
-		height: 100%;
-		background: #4caf50;
-		transition: width 0.3s;
-	}
 	#collection-edit {
 		display: flex;
 		flex-direction: column;
