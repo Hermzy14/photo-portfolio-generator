@@ -3,6 +3,24 @@
 	import { page } from '$app/stores';
 	import { updateCollection, deleteCollection, getCollectionById } from '$lib/collections';
 	import { getImageUrl, uploadImage } from '$lib/imageUpload';
+	import { supabase } from '$lib/supabase';
+	// Remove image from collection
+	async function handleRemoveImage(imageId: string, filePath: string) {
+		try {
+			// Remove from storage
+			await supabase.storage.from('portfolio-images').remove([filePath]);
+			// Remove from images table
+			await supabase.from('images').delete().eq('id', imageId);
+			// Remove from local state
+			collectionData.images = collectionData.images.filter((img: any) => img.id !== imageId);
+			// Also update data.images if present (for UI)
+			if (data && data.images) {
+				data.images = data.images.filter((img: any) => img.id !== imageId);
+			}
+		} catch (error) {
+			console.error('Failed to remove image:', error);
+		}
+	}
 	import { onMount } from 'svelte';
 
 	// Collection ID from the route
@@ -120,10 +138,12 @@
 		<div class="collection-edit-section">
 			<h2>Images</h2>
 			<div id="images-wrapper">
-				{#each data.images as image}
+				{#each data.images as image (image.id)}
 					<div class="image-container">
 						<img class="collection-images" src={getImageUrl(image.file_path)} alt={image.title} />
-						<button class="btn">Remove</button>
+						<button class="btn" onclick={() => handleRemoveImage(image.id, image.file_path)}
+							>Remove</button
+						>
 					</div>
 				{/each}
 			</div>
@@ -156,6 +176,26 @@
 {/if}
 
 <style>
+	.upload-statusbar {
+		margin-top: 1rem;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+	}
+	.progress-bar-wrapper {
+		width: 100%;
+		height: 8px;
+		background: #e0e0e0;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+	.progress-bar {
+		height: 100%;
+		background: #4caf50;
+		transition: width 0.3s;
+	}
 	#collection-edit {
 		display: flex;
 		flex-direction: column;
