@@ -7,12 +7,16 @@
 
 	// Collection ID from the route
 	$: collectionId = $page.params.id;
+
 	let collectionData = {
 		title: '',
 		description: '',
 		isPublic: false,
 		images: []
 	};
+
+	let isSaving = false;
+	let saveMessage = '';
 
 	// Fetch current collection
 	let data: any = null;
@@ -21,7 +25,11 @@
 	onMount(async () => {
 		try {
 			data = await getCollectionById(collectionId);
-			console.log(data);
+			// Initialize editable fields
+			collectionData.title = data.title;
+			collectionData.description = data.description;
+			collectionData.isPublic = data.is_public;
+			collectionData.images = data.images || [];
 		} catch (error) {
 			console.error(error);
 			errorMessage = 'An error occured while fetching collection.';
@@ -40,6 +48,29 @@
 					console.error('Image upload failed:', error);
 				}
 			}
+		}
+	}
+
+	// Save updated collection
+	async function handleSave() {
+		isSaving = true;
+		saveMessage = '';
+		try {
+			await updateCollection(collectionId, {
+				title: collectionData.title,
+				description: collectionData.description,
+				is_public: collectionData.isPublic
+			});
+			saveMessage = 'Collection updated!';
+			// Optionally, refresh data
+			data.title = collectionData.title;
+			data.description = collectionData.description;
+			data.is_public = collectionData.isPublic;
+		} catch (error) {
+			saveMessage = 'Failed to update collection.';
+			console.error(error);
+		} finally {
+			isSaving = false;
 		}
 	}
 
@@ -73,28 +104,21 @@
 	<p class="error">{errorMessage}</p>
 {:else if data}
 	<section id="collection-edit">
-		<!-- Collection title with an edit button/field -->
+		<!-- Collection title editable field -->
 		<div class="collection-edit-section">
-			<h1>Collection Title</h1>
-			<button class="btn">Edit</button>
+			<h2>Title</h2>
+			<input type="text" bind:value={collectionData.title} class="input" />
 		</div>
 
-		<!-- Collection description with an edit button/field -->
+		<!-- Collection description editable field -->
 		<div class="collection-edit-section">
-			<p>desc</p>
-			<button class="btn">Edit</button>
-		</div>
-
-		<!-- Update if public or not -->
-		<div class="collection-edit-section">
-			<label>
-				<input type="checkbox" checked />
-				Public Collection
-			</label>
+			<h2>Description</h2>
+			<textarea bind:value={collectionData.description} class="input" rows="3"></textarea>
 		</div>
 
 		<!-- Add and remove images -->
 		<div class="collection-edit-section">
+			<h2>Images</h2>
 			<div id="images-wrapper">
 				{#each data.images as image}
 					<div class="image-container">
@@ -106,7 +130,15 @@
 			<input type="file" accept="image/*" multiple onchange={handleImageChange} />
 		</div>
 
-		<a href="/dashboard" class="btn">Save</a>
+		<button
+			class="btn"
+			onclick={handleSave}
+			disabled={isSaving}
+			style="background-color: lightgreen;">{isSaving ? 'Saving...' : 'Save'}</button
+		>
+		{#if saveMessage}
+			<span>{saveMessage}</span>
+		{/if}
 		<button onclick={confirmDelete} class="btn" id="delete-btn">Delete collection</button>
 
 		{#if showDeleteConfirm}
