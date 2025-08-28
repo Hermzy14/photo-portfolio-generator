@@ -44,6 +44,7 @@
 
 <style>
 	#collection-view {
+		height: auto;
 		padding: 2rem;
 		display: flex;
 		flex-direction: column;
@@ -59,6 +60,8 @@
 	}
 
 	.image-grid > img {
-		width: 30dvw;
+		max-width: 30dvw;
+		aspect-ratio: auto;
+		object-fit: contain;
 	}
 </style>
