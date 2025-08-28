@@ -5,9 +5,9 @@
 
 	let title: string = '';
 	let description: string = '';
-	let isPublic: boolean = false;
 	let error: string = '';
 	let selectedFiles: FileList | null = null;
+	let createStatus: string = 'Create Collection';
 
 	/**
 	 * Handles the creation of a new collection.
@@ -15,14 +15,16 @@
 	 */
 	async function handleCreateCollection() {
 		try {
+			createStatus = 'Creating Collection...';
 			const {
 				success,
 				collection,
 				error: createError
-			} = await createCollection(title, description, isPublic);
+			} = await createCollection(title, description, true);
 
 			if (createError || !success || !collection) {
 				error = createError || 'Failed to create collection.';
+				createStatus = 'Create Collection';
 				return;
 			}
 
@@ -50,12 +52,18 @@
 	}
 </script>
 
-<input type="text" placeholder="Collection Title" bind:value={title} />
-<textarea placeholder="Collection Description" bind:value={description}></textarea>
-<input type="checkbox" name="is-public-checkbox" id="public-checkbox" bind:checked={isPublic} />
-<label for="public-checkbox">Make this collection public</label>
-<input type="file" accept="image/*" multiple onchange={handleImageChange} />
-<button onclick={handleCreateCollection}>Create Collection</button>
-{#if error}
-	<p>{error}</p>
-{/if}
+<section id="new-collection-section">
+	<input type="text" placeholder="Collection Title" bind:value={title} />
+	<textarea placeholder="Collection Description" bind:value={description}></textarea>
+	<input type="file" accept="image/*" multiple onchange={handleImageChange} />
+	<button onclick={handleCreateCollection} class="btn">{createStatus}</button>
+	{#if error}
+		<p>{error}</p>
+	{/if}
+</section>
+
+<style>
+	#new-collection-section {
+		gap: 1rem;
+	}
+</style>

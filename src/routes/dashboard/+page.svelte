@@ -76,7 +76,7 @@
 							</div>
 							<div class="image-edit-view">
 								<a href="/collections/{collection.id}" class="btn">Edit</a>
-								<a href="/collection/{collection.slug}" class="btn">View</a>
+								<a href="/collection/{collection.slug}" target="_blank" class="btn">View</a>
 							</div>
 						{:else}
 							<span>No images</span>
@@ -85,10 +85,12 @@
 					</div>
 				{/each}
 			{:else}
-				<p>You have no collections yet.</p>
-				<p>
-					<a href="/collections/new">Create your first collection</a>
-				</p>
+				<div id="no-collection-cta">
+					<h1>You have no collections yet.</h1>
+					<p>
+						<a href="/collections/new" class="btn">Create your first collection</a>
+					</p>
+				</div>
 			{/if}
 		</section>
 	{:else}
@@ -146,5 +148,14 @@
 
 	.image-edit-view {
 		margin-top: 1rem;
+	}
+
+	#no-collection-cta {
+		height: calc(100dvh - 8rem - 64px);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
 	}
 </style>
