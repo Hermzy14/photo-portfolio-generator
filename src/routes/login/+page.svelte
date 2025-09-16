@@ -1,6 +1,8 @@
 <!-- Log in with Supabase -->
 <script lang="ts">
+	import Error from '$lib/components/Error.svelte';
 	import { supabase } from '$lib/supabase';
+	import '../../app.css';
 	let email: string = '';
 	let password: string = '';
 	let error: string | null = null;
@@ -24,30 +26,29 @@
 </script>
 
 <!-- Login form -->
-<section id="log-in-page">
-	<h1>Log In</h1>
+<section class="grid place-content-center gap-4 min-h-screen min-w-screen">
+	<h1 class="text-5xl font-bold">Log In</h1>
 	<form onsubmit={handleLogin}>
-		<div id="email-password-wrapper">
-			<input type="email" bind:value={email} placeholder="Email" required />
-			<input type="password" bind:value={password} placeholder="Password" required />
+		<div>
+			<input
+				class="input validator mb-2"
+				type="email"
+				bind:value={email}
+				placeholder="Email"
+				required
+			/>
+			<input
+				class="input validator mb-2"
+				type="password"
+				bind:value={password}
+				placeholder="Password"
+				required
+			/>
 		</div>
-		<button type="submit" class="btn">Log In</button>
+		<button type="submit" class="btn btn-primary">Log In</button>
 		{#if error}
-			<p class="error">{error}</p>
+			<Error {error} />
 		{/if}
 	</form>
-	<p id="cta-text">Don't have an account? <a href="/signup">Sign Up</a></p>
+	<p class="mt-4">Don't have an account? <a href="/signup" class="btn btn-soft">Sign Up</a></p>
 </section>
-
-<style>
-	#email-password-wrapper {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		margin: 1rem 0 0.5rem 0;
-	}
-
-	#cta-text {
-		margin-top: 1rem;
-	}
-</style>
