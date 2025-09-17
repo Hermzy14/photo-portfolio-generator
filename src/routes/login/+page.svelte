@@ -26,10 +26,10 @@
 </script>
 
 <!-- Login form -->
-<section class="grid place-content-center gap-4 min-h-screen min-w-screen">
+<section class="flex flex-col justify-center items-center min-h-screen gap-4">
 	<h1 class="text-5xl font-bold">Log In</h1>
 	<form onsubmit={handleLogin}>
-		<div>
+		<div class="flex flex-col">
 			<input
 				class="input validator mb-2"
 				type="email"
@@ -50,5 +50,5 @@
 			<Error {error} />
 		{/if}
 	</form>
-	<p class="mt-4">Don't have an account? <a href="/signup" class="btn btn-soft">Sign Up</a></p>
+	<p class="mt-4">Don't have an account? <a href="/signup" class="link">Sign Up</a></p>
 </section>

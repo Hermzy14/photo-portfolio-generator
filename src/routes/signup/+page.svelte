@@ -1,6 +1,7 @@
-<!-- Sign up with Supabase -->
 <script lang="ts">
+	import '../../app.css';
 	import { supabase } from '$lib/supabase';
+
 	let email: string = '';
 	let password: string = '';
 	let username: string = '';
@@ -30,31 +31,36 @@
 </script>
 
 <!-- Signup form -->
-<section id="sign-up-page">
-	<h1>Sign Up</h1>
+<section class="flex flex-col justify-center items-center min-h-screen gap-4">
+	<h1 class="text-5xl font-bold">Sign Up</h1>
 	<form onsubmit={handleSignup}>
-		<div id="sign-up-wrapper">
-			<input type="text" bind:value={username} placeholder="Username" required />
-			<input type="email" bind:value={email} placeholder="Email" required />
-			<input type="password" bind:value={password} placeholder="Password" required />
-			<button type="submit" class="btn">Sign Up</button>
+		<div class="flex flex-col">
+			<input
+				class="input validator mb-2"
+				type="text"
+				bind:value={username}
+				placeholder="Username"
+				required
+			/>
+			<input
+				class="input validator mb-2"
+				type="email"
+				bind:value={email}
+				placeholder="Email"
+				required
+			/>
+			<input
+				class="input validator mb-2"
+				type="password"
+				bind:value={password}
+				placeholder="Password"
+				required
+			/>
 		</div>
+		<button type="submit" class="btn btn-primary">Sign Up</button>
 		{#if error}
 			<p class="error">{error}</p>
 		{/if}
 	</form>
-	<p id="cta-text">Already have an account? <a href="/login">Log In</a></p>
+	<p class="mt-4">Already have an account? <a href="/login" class="link">Log In</a></p>
 </section>
-
-<style>
-	#sign-up-wrapper {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		margin: 1rem 0 0.5rem 0;
-	}
-
-	#cta-text {
-		margin-top: 1rem;
-	}
-</style>
